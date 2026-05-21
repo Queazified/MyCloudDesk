@@ -3,6 +3,7 @@ import { getServerSession } from "next-auth";
 import AzureADProvider from "next-auth/providers/azure-ad";
 import AuthentikProvider from "next-auth/providers/authentik";
 import CredentialsProvider from "next-auth/providers/credentials";
+import type { OAuthConfig } from "next-auth/providers/oauth";
 import { Role } from "@prisma/client";
 import prisma from "@/lib/prisma";
 import { getAppSettings, getAdminEmails } from "@/lib/settings";
@@ -67,7 +68,7 @@ function buildGenericOidcProvider() {
         role: Role.USER,
       };
     },
-  } as any;
+  } satisfies OAuthConfig<Record<string, unknown>>;
 }
 
 export function getLoginProviders() {

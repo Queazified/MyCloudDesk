@@ -3,21 +3,33 @@ import prisma from "@/lib/prisma";
 import { APP_NAME, APP_TAGLINE, DEFAULT_SUPPORT_EMAIL } from "@/lib/constants";
 import { parseCommaSeparatedList } from "@/lib/utils";
 
+function buildDefaultSettings(): AppSettings {
+  const now = new Date();
+
+  return {
+    id: "default",
+    organisationName: "Queazified",
+    portalTitle: APP_NAME,
+    portalSubtitle: APP_TAGLINE,
+    supportEmail: DEFAULT_SUPPORT_EMAIL,
+    remoteAccessMode: RemoteAccessMode.NEW_TAB,
+    sessionTimeoutMinutes: 480,
+    brandingPrimaryColor: "#2563eb",
+    adminRoleMappings: "admin@queazified.co.uk",
+    createdAt: now,
+    updatedAt: now,
+  };
+}
+
 export async function getAppSettings() {
+  if (!process.env.DATABASE_URL) {
+    return buildDefaultSettings();
+  }
+
   const settings = await prisma.appSettings.upsert({
     where: { id: "default" },
     update: {},
-    create: {
-      id: "default",
-      organisationName: "Queazified",
-      portalTitle: APP_NAME,
-      portalSubtitle: APP_TAGLINE,
-      supportEmail: DEFAULT_SUPPORT_EMAIL,
-      remoteAccessMode: RemoteAccessMode.NEW_TAB,
-      sessionTimeoutMinutes: 480,
-      brandingPrimaryColor: "#2563eb",
-      adminRoleMappings: "admin@queazified.co.uk",
-    },
+    create: buildDefaultSettings(),
   });
 
   return settings;
