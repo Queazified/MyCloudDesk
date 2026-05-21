@@ -36,13 +36,13 @@ const sessionInclude = {
   take: 8,
 } satisfies Prisma.SessionFindManyArgs;
 
-function getHistoryEntry(sessions: Array<{ status: SessionStatus; startedAt: Date }>) {
+function getLastCompletedSession(sessions: Array<{ status: SessionStatus; startedAt: Date }>) {
   return sessions.find((session) => session.status !== SessionStatus.ACTIVE) ?? sessions[0] ?? null;
 }
 
 function serializeCloudPcForRole(cloudPc: Prisma.CloudPCGetPayload<{ include: { sessions: typeof sessionInclude } }>, user: AppUser) {
   const activeSession = cloudPc.sessions.find((session) => session.status === SessionStatus.ACTIVE) ?? null;
-  const lastOccupiedSession = getHistoryEntry(cloudPc.sessions);
+  const lastOccupiedSession = getLastCompletedSession(cloudPc.sessions);
   const connectability = getConnectability({
     status: cloudPc.status,
     isEnabled: cloudPc.isEnabled,

@@ -16,8 +16,8 @@ async function syncUserRecord({
 }: {
   email: string;
   name?: string | null;
-  provider?: string | null;
-  providerAccountId?: string | null;
+  provider?: string;
+  providerAccountId?: string;
 }) {
   const settings = await getAppSettings();
   const adminEmails = getAdminEmails(settings);
@@ -167,7 +167,7 @@ export const authOptions: NextAuthOptions = {
         const dbUser = await syncUserRecord({
           email: user.email,
           name: user.name,
-          provider: account?.provider ?? ("provider" in user ? String(user.provider ?? "") : null),
+          provider: account?.provider ?? ("provider" in user ? user.provider ?? undefined : undefined),
           providerAccountId: account?.providerAccountId,
         });
 

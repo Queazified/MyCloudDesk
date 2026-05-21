@@ -164,7 +164,7 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md).
 
 See [SECURITY.md](./SECURITY.md). Never commit `.env` files, and review remote access URLs carefully before deploying.
 
-## 20. Deployment notes for `myclouddesk.queazified.co.uk`
+## 20. Deployment notes and checklist for `myclouddesk.queazified.co.uk`
 
 - Use a managed PostgreSQL database.
 - Set `NEXTAUTH_URL=https://myclouddesk.queazified.co.uk`.
@@ -172,9 +172,6 @@ See [SECURITY.md](./SECURITY.md). Never commit `.env` files, and review remote a
 - Terminate TLS before the app.
 - Keep SSO secrets outside GitHub.
 - Only expose trusted remote desktop URLs.
-
-## Production deployment checklist
-
 1. Provision PostgreSQL.
 2. Set environment variables from `.env.example`.
 3. Run `npm run prisma:generate` and apply the schema.

@@ -39,7 +39,7 @@ export default async function LoginPage() {
             <LoginButtons providers={providers} />
           </div>
           <p className="mt-6 text-xs text-slate-400">
-            No bookings or reservations are used in MyCloudDesk. You simply sign in, choose an available cloud PC, and connect.
+            No bookings or reservations are required in MyCloudDesk. You simply sign in, choose an available cloud PC, and connect.
           </p>
         </section>
       </div>
