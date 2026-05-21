@@ -1,0 +1,113 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum CloudPcStatus {
+  AVAILABLE
+  OCCUPIED
+  OFFLINE
+  MAINTENANCE
+  REPAIR
+}
+
+enum SessionStatus {
+  ACTIVE
+  ENDED
+  FORCE_ENDED
+  ERROR
+}
+
+enum AccessPolicy {
+  ALL_USERS
+  ADMINS_ONLY
+}
+
+enum RemoteAccessMode {
+  NEW_TAB
+  EMBEDDED
+}
+
+model User {
+  id                String    @id @default(cuid())
+  name              String
+  email             String    @unique
+  role              Role      @default(USER)
+  provider          String?
+  providerAccountId String?
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+  sessions          Session[]
+  auditLogs         AuditLog[]
+}
+
+model CloudPC {
+  id               String        @id @default(cuid())
+  name             String        @unique
+  description      String?
+  status           CloudPcStatus @default(OFFLINE)
+  remoteUrl        String
+  lastSeenAt       DateTime?
+  groupName        String?
+  isEnabled        Boolean       @default(true)
+  maintenanceNotes String?
+  accessPolicy     AccessPolicy  @default(ALL_USERS)
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+  sessions         Session[]
+}
+
+model Session {
+  id              String        @id @default(cuid())
+  cloudPcId       String
+  userId          String
+  startedAt       DateTime      @default(now())
+  endedAt         DateTime?
+  durationSeconds Int?
+  status          SessionStatus @default(ACTIVE)
+  endReason       String?
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  cloudPc         CloudPC       @relation(fields: [cloudPcId], references: [id], onDelete: Cascade)
+  user            User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([cloudPcId, status])
+  @@index([userId, status])
+}
+
+model AuditLog {
+  id          String   @id @default(cuid())
+  actorUserId String?
+  action      String
+  targetType  String
+  targetId    String
+  metadata    Json?
+  createdAt   DateTime @default(now())
+  actorUser   User?    @relation(fields: [actorUserId], references: [id], onDelete: SetNull)
+
+  @@index([targetType, targetId])
+  @@index([createdAt])
+}
+
+model AppSettings {
+  id                   String           @id @default("default")
+  organisationName     String           @default("Queazified")
+  portalTitle          String           @default("MyCloudDesk")
+  portalSubtitle       String           @default("Access your Queazified cloud desktop")
+  supportEmail         String?
+  remoteAccessMode     RemoteAccessMode @default(NEW_TAB)
+  sessionTimeoutMinutes Int             @default(480)
+  brandingPrimaryColor String           @default("#2563eb")
+  adminRoleMappings    String           @default("admin@queazified.co.uk")
+  createdAt            DateTime         @default(now())
+  updatedAt            DateTime         @updatedAt
+}
