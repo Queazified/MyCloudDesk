@@ -13,17 +13,33 @@ export function LoginButtons({
 
   async function handleMockLogin(email: string) {
     setBusyId(email);
-    await signIn("credentials", {
-      email,
-      callbackUrl: "/dashboard",
-    });
-    setBusyId(null);
+    try {
+      const result = await signIn("credentials", {
+        email,
+        callbackUrl: "/dashboard",
+      });
+      // If signIn returned (didn't redirect), it means login failed
+      if (result?.error) {
+        setBusyId(null);
+      }
+      // If no result or error, signIn redirected successfully
+    } catch {
+      setBusyId(null);
+    }
   }
 
   async function handleSsoLogin(providerId: string) {
     setBusyId(providerId);
-    await signIn(providerId, { callbackUrl: "/dashboard" });
-    setBusyId(null);
+    try {
+      const result = await signIn(providerId, { callbackUrl: "/dashboard" });
+      // If signIn returned (didn't redirect), it means login failed
+      if (result?.error) {
+        setBusyId(null);
+      }
+      // If no result or error, signIn redirected successfully
+    } catch {
+      setBusyId(null);
+    }
   }
 
   const hasMock = providers.some((provider) => provider.kind === "mock");
