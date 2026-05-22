@@ -54,6 +54,18 @@ generate_secret() {
   echo ""
 }
 
+# Move into the repository root so relative paths always work even
+# when the script is launched from outside the project directory.
+SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+REPO_ROOT="$(cd -- "${SCRIPT_DIR}/.." && pwd)"
+cd "$REPO_ROOT"
+
+if [ ! -f "package.json" ]; then
+  echo "Error: Could not find package.json in '${REPO_ROOT}'."
+  echo "Please run this installer from a valid MyCloudDesk checkout."
+  exit 1
+fi
+
 print_step "Checking prerequisites"
 require_command npm
 require_command docker
