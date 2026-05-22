@@ -24,7 +24,8 @@ export function LoginButtons({
         setBusyId(null);
       }
       // If result is falsy/undefined, signIn redirected successfully
-    } catch {
+    } catch (error) {
+      console.error("Mock login error:", error);
       setBusyId(null);
     }
   }
@@ -39,7 +40,8 @@ export function LoginButtons({
         setBusyId(null);
       }
       // If result is falsy/undefined, signIn redirected successfully
-    } catch {
+    } catch (error) {
+      console.error("SSO login error:", error);
       setBusyId(null);
     }
   }
