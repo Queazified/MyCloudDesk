@@ -4,6 +4,14 @@ import { useState } from "react";
 import { signIn } from "next-auth/react";
 import { mockUsers } from "@/lib/constants";
 
+function getDashboardCallbackUrl() {
+  if (typeof window === "undefined") {
+    return "/dashboard";
+  }
+
+  return `${window.location.origin}/dashboard`;
+}
+
 export function LoginButtons({
   providers,
 }: {
@@ -16,7 +24,7 @@ export function LoginButtons({
     try {
       const result = await signIn("credentials", {
         email,
-        callbackUrl: "/dashboard",
+        callbackUrl: getDashboardCallbackUrl(),
       });
       // signIn() with redirect: true (default) behaves as follows:
       // - If login succeeds: redirects and doesn't return (page unloads)
@@ -34,7 +42,7 @@ export function LoginButtons({
   async function handleSsoLogin(providerId: string) {
     setBusyId(providerId);
     try {
-      const result = await signIn(providerId, { callbackUrl: "/dashboard" });
+      const result = await signIn(providerId, { callbackUrl: getDashboardCallbackUrl() });
       // signIn() with redirect: true (default) behaves as follows:
       // - If login succeeds: redirects and doesn't return (page unloads)
       // - If login fails: returns an object with error/status info
