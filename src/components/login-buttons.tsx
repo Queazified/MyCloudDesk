@@ -13,17 +13,39 @@ export function LoginButtons({
 
   async function handleMockLogin(email: string) {
     setBusyId(email);
-    await signIn("credentials", {
-      email,
-      callbackUrl: "/dashboard",
-    });
-    setBusyId(null);
+    try {
+      const result = await signIn("credentials", {
+        email,
+        callbackUrl: "/dashboard",
+      });
+      // signIn() with redirect: true (default) behaves as follows:
+      // - If login succeeds: redirects and doesn't return (page unloads)
+      // - If login fails: returns an object with error/status info
+      // Therefore, if result is truthy, login failed and we should reset busy state
+      if (result) {
+        setBusyId(null);
+      }
+    } catch (error) {
+      console.error("Mock login error:", error);
+      setBusyId(null);
+    }
   }
 
   async function handleSsoLogin(providerId: string) {
     setBusyId(providerId);
-    await signIn(providerId, { callbackUrl: "/dashboard" });
-    setBusyId(null);
+    try {
+      const result = await signIn(providerId, { callbackUrl: "/dashboard" });
+      // signIn() with redirect: true (default) behaves as follows:
+      // - If login succeeds: redirects and doesn't return (page unloads)
+      // - If login fails: returns an object with error/status info
+      // Therefore, if result is truthy, login failed and we should reset busy state
+      if (result) {
+        setBusyId(null);
+      }
+    } catch (error) {
+      console.error("SSO login error:", error);
+      setBusyId(null);
+    }
   }
 
   const hasMock = providers.some((provider) => provider.kind === "mock");
