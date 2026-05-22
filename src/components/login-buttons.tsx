@@ -18,11 +18,12 @@ export function LoginButtons({
         email,
         callbackUrl: "/dashboard",
       });
-      // If signIn returned (didn't redirect), it means login failed
-      if (result?.error) {
+      // If signIn returned anything (didn't redirect), login failed
+      // Reset busy state so user can retry
+      if (result) {
         setBusyId(null);
       }
-      // If no result or error, signIn redirected successfully
+      // If result is falsy/undefined, signIn redirected successfully
     } catch {
       setBusyId(null);
     }
@@ -32,11 +33,12 @@ export function LoginButtons({
     setBusyId(providerId);
     try {
       const result = await signIn(providerId, { callbackUrl: "/dashboard" });
-      // If signIn returned (didn't redirect), it means login failed
-      if (result?.error) {
+      // If signIn returned anything (didn't redirect), login failed
+      // Reset busy state so user can retry
+      if (result) {
         setBusyId(null);
       }
-      // If no result or error, signIn redirected successfully
+      // If result is falsy/undefined, signIn redirected successfully
     } catch {
       setBusyId(null);
     }
