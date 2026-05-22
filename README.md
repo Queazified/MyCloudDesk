@@ -56,7 +56,15 @@ MyCloudDesk is designed for `myclouddesk.queazified.co.uk` and focuses on the si
 - Docker and Docker Compose
 - npm
 
-## 6. Clone and install
+## 6. One-script install
+
+Run this from the project root to install dependencies, start PostgreSQL, apply schema, generate Prisma client, and seed sample data:
+
+```bash
+bash scripts/install.sh
+```
+
+## 7. Clone and install manually
 
 ```bash
 git clone https://github.com/Queazified/myclouddesk.git
