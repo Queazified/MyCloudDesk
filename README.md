@@ -80,6 +80,8 @@ cp .env.example .env
 
 Update values in `.env` before running the app.
 
+If you open the dev app from another device on your LAN, add that host/IP to `ALLOWED_DEV_ORIGINS`.
+
 ## 9. PostgreSQL setup using Docker Compose
 
 Use either command depending on your Docker setup:
